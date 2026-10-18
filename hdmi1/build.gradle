@@ -1,0 +1,27 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'app.hdmi1'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "app.hdmi1"
+        minSdk 21
+        // 电视是 Android 9 (API 28)；targetSdk 保持 28，避免后台启动 Activity 的限制
+        targetSdk 28
+        versionCode 1
+        versionName "1.0"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 内存清理：连接电视本机的 adb（127.0.0.1:5555）需要网络权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.software.leanback" android:required="false" />
+
+    <application
+        android:allowBackup="false"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
+
+        <!-- 第一级菜单。让 Emotn UI 等应用点“设置”时，打开本应用。
+             电视上原本没有应用处理 android.settings.SETTINGS，所以不会和别的应用冲突。 -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.settings.SETTINGS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".HdmiSettingsActivity"
+            android:exported="false" />
+
+        <!-- 无线网络设置；同时响应 Emotn UI 的 WiFi 按钮发出的 android.settings.WIFI_SETTINGS -->
+        <activity
+            android:name=".WifiSettingsActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.settings.WIFI_SETTINGS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MemorySettingsActivity"
+            android:exported="false" />
+
+        <!-- 开机广播：触发“自动结束进程”（开关关闭时只记一行记录） -->
+        <receiver
+            android:name=".BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 待机唤醒完成后 TCL 系统发出的广播：触发“自动结束进程” -->
+        <receiver
+            android:name=".WakeReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.STR_RESUME_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 闹钟到点后真正执行“检查并结束进程”，只接收本应用自己定的闹钟 -->
+        <receiver
+            android:name=".CleanupReceiver"
+            android:exported="false" />
+
+        <!-- 暂时停用：开机自动进入 HDMI 的延迟执行（恢复方法见 BootReceiver.java 的说明）
+        <receiver
+            android:name=".SwitchReceiver"
+            android:exported="false" />
+        -->
+    </application>
+</manifest>
