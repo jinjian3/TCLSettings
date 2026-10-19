@@ -17,20 +17,15 @@ Customized Settings + HDMI1（TCL V8M Pro / Android 9）
  安装后必须各自手动打开一次，系统才会允许它们接收广播。
  （可选）开机自启白名单：adb shell dumpsys deviceidle whitelist +app.customized.settings
 
-三、从旧应用（包名 app.hdmi.autoswitch）迁移——请按顺序做
- 新包名对系统来说是另一个应用，所以有三件事要注意：
- 1. 先“停用”旧应用，不要卸载：
-      adb shell pm disable-user --user 0 app.hdmi.autoswitch
-    原因：旧应用和新应用都登记了“设置”和“WiFi”入口，不停用的话，Emotn UI 点设置/WiFi 时
-    会弹出“选择应用”的对话框。需要恢复时：adb shell pm enable app.hdmi.autoswitch
- 2. 无线网络：旧应用创建的网络，新应用没有权限修改或删除（系统限制）。
+三、注意事项
+ 1. 无线网络：旧应用创建的网络，新应用没有权限修改或删除（系统限制）。
     要改用新应用管理时，请在电视上操作：
       TCL 设置里对这个无线网络选择“忽略” -> 打开 Emotn UI 的 WiFi 按钮（会进入新应用的“无线网络设置”）
       -> 填写并“保存并连接（静态 IP）”。
     这一步会让网络短暂断开，所以请在电视上操作，不要用无线 adb。
     新应用保存好网络后，再卸载旧应用。（我不确定卸载旧应用时系统会不会连带删除它创建的网络，
     所以不要在重建网络之前卸载。）
- 3. 本机 ADB 的授权是按应用保存的：新应用第一次“连接测试”时，电视会再弹一次“允许调试”。
+ 2. 本机 ADB 的授权是按应用保存的：新应用第一次“连接测试”时，电视会再弹一次“允许调试”。
 
 四、Customized Settings 使用说明
  第一级菜单：HDMI 设置 / 无线网络设置 / 内存清理设置。遥控器返回键回到上一级。
